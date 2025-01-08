@@ -1,0 +1,90 @@
+﻿
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE DATABASE BANCODADOS01;
+
+USE BANCODADOS01;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+BEGIN TRANSACTION
+
+CREATE TABLE TB_AUTOR (
+    AUT_ID					INT IDENTITY(1,1) PRIMARY KEY,
+    AUT_STATUS_REGISTRO		BIT NOT NULL,
+    AUT_NOME				VARCHAR(50) NOT NULL,
+    AUT_SOBRENOME			VARCHAR(100) NOT NULL,
+	AUT_STATUS_VIDA			BIT NOT NULL,
+    AUT_DATA_NASCIMENTO		DATETIME2 NOT NULL,
+    AUT_DATA_FALECIMENTO	DATETIME2 NULL
+);
+
+CREATE TABLE TB_FRASE (
+    FRA_ID					INT IDENTITY(1,1) PRIMARY KEY,
+    FRA_AUT_ID				INT NOT NULL,
+    FRA_STATUS_REGISTRO		BIT NOT NULL,
+    FRA_FRASE				VARCHAR(1000) NOT NULL,
+    FRA_DATA_REGISTRO		DATETIME NOT NULL,
+    
+    CONSTRAINT FK_FRASES_AUTORES FOREIGN KEY (FRA_AUT_ID) REFERENCES TB_AUTOR(AUT_ID)
+);
+
+ROLLBACK TRANSACTION
+COMMIT TRANSACTION
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+BEGIN TRANSACTION
+
+INSERT INTO TB_AUTOR (AUT_STATUS_REGISTRO, AUT_NOME, AUT_SOBRENOME, AUT_STATUS_VIDA, AUT_DATA_NASCIMENTO, AUT_DATA_FALECIMENTO)
+VALUES
+(1, 'William', 'Shakespeare', 0, '1564-04-23T00:00:00', '1616-04-23T00:00:00'),
+(1, 'Jane', 'Austen', 0, '1775-12-16T00:00:00', '1817-07-18T00:00:00'),
+(1, 'Mark', 'Twain', 0, '1835-11-30T00:00:00', '1910-04-21T00:00:00'),
+(1, 'Albert', 'Einstein', 0, '1879-03-14T00:00:00', '1955-04-18T00:00:00'),
+(1, 'Maya', 'Angelou', 0, '1928-04-04T00:00:00', '2014-05-28T00:00:00'),
+(1, 'Charles', 'Dickens', 0, '1812-02-07T00:00:00', '1870-06-09T00:00:00'),
+(1, 'George', 'Orwell', 0, '1903-06-25T00:00:00', '1950-01-21T00:00:00'),
+(1, 'Virginia', 'Woolf', 0, '1882-01-25T00:00:00', '1941-03-28T00:00:00'),
+(1, 'Oscar', 'Wilde', 0, '1854-10-16T00:00:00', '1900-11-30T00:00:00'),
+(1, 'Frida', 'Kahlo', 0, '1907-07-06T00:00:00', '1954-07-13T00:00:00'),
+(1, 'João', 'Silva', 1, '1980-05-12T00:00:00', NULL),
+(1, 'Maria', 'Santos', 1, '1990-03-23T00:00:00', NULL),
+(1, 'Carlos', 'Oliveira', 1, '1975-07-30T00:00:00', NULL), 
+(1, 'Fernanda', 'Lima', 1, '1985-12-02T00:00:00', NULL), 
+(1, 'Eduardo', 'Pereira', 1, '2000-09-14T00:00:00', NULL);
+
+INSERT INTO TB_FRASE (FRA_AUT_ID, FRA_STATUS_REGISTRO, FRA_FRASE, FRA_DATA_REGISTRO)
+VALUES
+(1, 1, 'Ser ou não ser, eis a questão.', GETDATE()),
+(1, 1, 'O mundo inteiro é um palco, e todos os homens e mulheres são apenas atores.', GETDATE()),
+(2, 1, 'Não há encanto igual à ternura de coração.', GETDATE()),
+(2, 1, 'Declaro, afinal, que não há prazer como o da leitura!', GETDATE()),
+(3, 1, 'O segredo para ir em frente é começar.', GETDATE()),
+(3, 1, 'O homem que não lê não tem vantagem sobre o homem que não sabe ler.', GETDATE()),
+(4, 1, 'A vida é como andar de bicicleta. Para manter o equilíbrio, você precisa se manter em movimento.', GETDATE()),
+(4, 1, 'A imaginação é mais importante que o conhecimento.', GETDATE()),
+(5, 1, 'Se você não gosta de algo, mude. Se não puder mudar, mude sua atitude.', GETDATE()),
+(5, 1, 'Podemos enfrentar muitas derrotas, mas não devemos ser derrotados.', GETDATE()),
+(6, 1, 'Era o melhor dos tempos, era o pior dos tempos.', GETDATE()),
+(7, 1, 'A guerra é a paz. A liberdade é a escravidão. A ignorância é a força.', GETDATE()),
+(8, 1, 'Durante a maior parte da história, Anônimo era uma mulher.', GETDATE()),
+(9, 1, 'Seja você mesmo; todos os outros já existem.', GETDATE()),
+(10, 1, 'Pinto flores para que não morram.', GETDATE()),
+(11, 1, 'A vida é feita de escolhas.', GETDATE()),
+(12, 1, 'O conhecimento é a chave para o futuro.', GETDATE()),
+(13, 1, 'Não existe sucesso sem esforço.', GETDATE()),
+(14, 1, 'A coragem vem de dentro de nós.', GETDATE()),
+(15, 1, 'O tempo é o recurso mais valioso.', GETDATE());
+
+ROLLBACK TRANSACTION
+
+COMMIT TRANSACTION
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT * FROM TB_AUTOR;
+
+SELECT * FROM TB_FRASE;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------

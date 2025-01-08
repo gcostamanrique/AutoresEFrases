@@ -1,0 +1,212 @@
+﻿@{
+    ViewData["Title"] = "POSTFrase";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="text-center">
+
+    <h3 class="m-4">Registrar Frase</h3>
+
+    <p>Preencher o formulário por completo para registrar uma nova frase.</p>
+
+    <div class="pt-2 row justify-content-center fw-bold">
+
+        <label class="col-sm-1 col-form-label">Autor ID</label>
+
+        <div class="col-sm-2">
+            <input id="AutorID" name="AutorID" type="text" class="form-control" maxlength="5" oninput="validaId(this)">
+        </div>
+
+        <label class="col-sm-1 col-form-label">Frase</label>
+
+        <div class="col-sm-4">
+            <input id="Frase" name="Frase" type="text" class="form-control" maxlength="255">
+        </div>
+
+    </div>
+
+    <div class="pt-2 row justify-content-center fw-bold">
+
+        <div class="col-sm-3">
+            <p id="ErroAutorID" class="mb-1 fw-bold text-danger" style="visibility:hidden">...</p>
+        </div>
+
+        <div class="col-sm-5">
+            <p id="ErroFrase" class="mb-1 fw-bold text-danger" style="visibility:hidden">...</p>
+        </div>
+
+    </div>
+
+    <div class="pt-4 row justify-content-center fw-bold">
+
+        <div class="col-sm-3">
+            <a id="Limpar" name="Limpar" class="btn col-10 btn-danger">Limpar Formulário</a>
+        </div>
+
+        <div class="col-sm-3">
+            <a id="Enviar" name="Enviar" class="btn col-10 btn-success">Registrar Frase</a>
+        </div>
+
+    </div>
+
+    <p id="Retorno" class="m-4 fw-bold" style="visibility:hidden">...</p>
+
+</div>
+
+<script>
+
+    function validaId(input)
+    {
+        input.value = input.value.replace(/\D/g, '');
+    }
+
+    const enviar = document.getElementById("Enviar");
+    enviar.addEventListener("click", async function()
+    {
+        var requisicaoFrase = MontarRequisicaoJson();
+        var resposta = await EnviarRequisicaoHTTPRequest("Frase", "POSTFrase", requisicaoFrase);
+
+        LimparErrosNoModelo();
+
+        if ( resposta && resposta.title == "Validation errors")
+        {
+            IdentificarErrosNoModelo(resposta.validationErrors);
+        }
+        else if ( resposta && resposta.id)
+        {
+            LimparModelo();
+            AtivarRetorno(resposta);
+        }
+    });
+
+    const limpar = document.getElementById("Limpar");
+    limpar.addEventListener("click", async function()
+    {
+        LimparModelo();
+        LimparErrosNoModelo();
+        InativarRetorno()
+    });
+
+    function MontarRequisicaoJson()
+    {
+        var autorID = document.getElementById("AutorID");
+        var frase = document.getElementById("Frase");
+
+        var requisicao =
+        {
+            "autorId" : autorID.value || null,
+            "frase" : frase.value
+        }
+
+        return JSON.stringify(requisicao);
+    }
+
+    async function EnviarRequisicaoHTTPRequest(controlador, metodo, requisicaoAutor)
+    {
+        var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        var url = "/" + controlador + "/" + metodo;
+
+        try
+        {
+            var response = await fetch(url,
+            {
+                method: "POST",
+                headers:
+                {
+                    "Content-Type": "application/json",
+                    "X-XSRF-TOKEN": token
+                },
+                body: requisicaoAutor
+            });
+
+            if (response.status == 200)
+            {
+                var jsonResponse = await response.json();
+
+                return jsonResponse;
+            }
+            else if (response.status == 400)
+            {
+                var jsonReponse = response.json();
+
+                return jsonReponse;
+            }
+            else
+            {
+                AtivarRetornoErro();
+
+                return jsonReponse;
+            }
+        }
+        catch (error)
+        {
+            AtivarRetornoErro();
+
+            return null;
+        }
+    }
+
+    function IdentificarErrosNoModelo(resposta)
+    {
+        var erroAutorID = document.getElementById("ErroAutorID");
+        var erroFrase = document.getElementById("ErroFrase");
+
+        if(resposta.autorId)
+        {
+            erroAutorID.textContent = resposta.autorId[0];
+            erroAutorID.style.visibility = "visible";
+        }
+
+        if(resposta.frase)
+        {
+            erroFrase.textContent = resposta.frase[0];
+            erroFrase.style.visibility = "visible";
+        }
+    }
+
+    function LimparErrosNoModelo()
+    {
+        var erroAutorID = document.getElementById("ErroAutorID");
+        var erroFrase = document.getElementById("ErroFrase");
+
+        erroAutorID.textContent = "...";
+        erroAutorID.style.visibility = "hidden";
+
+        erroFrase.textContent = "...";
+        erroFrase.style.visibility = "hidden";
+    }
+
+    function LimparModelo()
+    {
+        var autorId = document.getElementById("AutorID");
+        var frase = document.getElementById("Frase");
+
+        autorId.value = "";
+        frase.value = "";
+    }
+
+    function AtivarRetorno(resposta)
+    {
+        var retorno = document.getElementById("Retorno");
+        retorno.style.visibility = "visible";
+        retorno.style.color = "green";
+        retorno.innerText = "Cadastro realizado com sucesso! Novo cadastro possui o número de identificação: " + resposta.id;
+    }
+
+    function AtivarRetornoErro()
+    {
+        var erro = document.getElementById("Retorno");
+        erro.style.visibility = "visible";
+        erro.style.color = "red";
+        erro.innerText = "Aconteceu algum erro, entre em contato com o suporte!";
+    }
+
+    function InativarRetorno()
+    {
+        var erro = document.getElementById("Retorno");
+        erro.style.visibility = "hidden";
+        erro.innerText = "";
+    }
+
+</script>

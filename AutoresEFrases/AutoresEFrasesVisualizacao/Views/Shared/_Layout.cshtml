@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AutoresEFraseVisualizacao</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AutoresEFrasesVisualizacao.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar fixed-top bg-black bg-body-tertiary">
+            <form class="container-fluid justify-content-start" style="width: unset">
+                <button class="btn btn-outline-success me-3" type="button" onclick="window.location.href='@Url.Action("PesquisarAutor", "Autor")'">GET Autor</button>
+                <button class="btn btn-outline-success me-3" type="button" onclick="window.location.href='@Url.Action("PesquisarFrase", "Frase")'">GET Frase</button>
+                <button class="btn btn-outline-warning me-3" type="button" onclick="window.location.href='@Url.Action("IncluirAutor", "Autor")'">POST Autor</button>
+                <button class="btn btn-outline-warning me-3" type="button" onclick="window.location.href='@Url.Action("IncluirFrase", "Frase")'">POST Frase</button>
+            </form>
+        </nav>
+    </header>
+
+    <div class="container" style="padding-top: 75px">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer position-fixed bg-black" style="line-height: 40px; text-align:center; color: #FFFFFF">
+        <div>© @DateTime.Now.ToString("yyyy") GC MANRIQUE TECNOLOGIA LTDA</div>
+    </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,308 @@
+﻿@{
+    ViewData["Title"] = "GETFrase";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="text-center">
+
+    <h3 class="m-4">Pesquisar Frase</h3>
+
+    <p>Pesquisa sem parâmetros retorna todos os valores do banco de dados.</p>
+
+    <div class="p-4 row justify-content-center fw-bold">
+
+        <label class="col-sm-1 col-form-label">ID</label>
+        <div class="col-sm-1">
+            <input id="FraseID" name="FraseID" type="text" class="form-control" maxlength="5" oninput="validaId(this)">
+        </div>
+
+        <label class="col-sm-2 col-form-label">Frase ou Palavras chaves</label>
+        <div class="col-sm-6">
+            <input id="Frase" name="Frase" type="text" class="form-control" maxlength="255">
+        </div>
+
+        <div class="col-sm-1">
+            <button id="Limpar" name="Limpar" class="btn btn-outline-danger">Limpar</button>
+        </div>
+
+    </div>
+
+    <div class="p-4 row justify-content-center fw-bold">
+
+        <div class="col-sm-3">
+            <a id="PesquisarFrase" name="PesquisarFrase" class="btn col-10 btn-success">Pesquisar Frase</a>
+        </div>
+
+        <div class="col-sm-3">
+            <a id="PesquisarFraseEAutor" name="PesquisarFraseEAutor" class="btn col-10 btn-success">Pesquisar Frase e Autor</a>
+        </div>
+
+    </div>
+
+    <div"><h6 id="Retorno" name="Retorno" style="visibility:hidden">Retorno</h6></div>
+
+    <div>
+        <table id="TabelaFrase">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Frase</th>
+                    <th>Registrado</th>
+                    <th>Autor</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    
+</div>
+    
+    <div class="modal fade" id="ModalFraseEAutor" tabindex="-1" aria-labelledby="RotuloModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="RotuloModal">Frase e Autor</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="autorModal"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+</div>
+
+<script>
+
+    const tabela = $('#TabelaFrase').DataTable({
+        paging: true,
+        searching: true,
+        ordering: true,
+        lengthChange: false,
+        info: true,
+        pageLength: 5,
+        language:
+        {
+            search: "Pesquisar:",
+            searchPlaceholder: "",
+            paginate:
+            {
+                previous: "Anterior",
+                next: "Próximo"
+            },
+            info: "Mostrando de _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Nenhum registro disponível",
+            loadingRecords: "Carregando...",
+            zeroRecords: "Nenhum registro encontrado",
+            processing: "Processando...",
+            emptyTable: "Não há dados disponíveis na tabela"
+        },
+        responsive: true
+    });
+
+    function validaId(input)
+    {
+        input.value = input.value.replace(/\D/g, '');
+    }
+
+    const pesquisaAutor = document.getElementById("PesquisarFrase");
+    pesquisaAutor.addEventListener("click", async function()
+    {
+        Inativar()
+        var getFraseDto = MontarRequisicaoJson();
+        var resposta = await EnviarRequisicaoHTTPRequest("Frase", "GETFrase", getFraseDto);
+        CriarLinhaTabela(resposta);
+    });
+
+    const pesquisaAutorEFrase = document.getElementById("PesquisarFraseEAutor");
+    pesquisaAutorEFrase.addEventListener("click", async function()
+    {
+        Inativar()
+        var getFraseDto = MontarRequisicaoJson();
+        var resposta = await EnviarRequisicaoHTTPRequest("Frase", "GETFraseEAutor", getFraseDto);
+        CriarLinhaTabela(resposta);
+    });
+
+    const botaoLimpar = document.getElementById("Limpar");
+    botaoLimpar.addEventListener("click", function()
+    {
+        Inativar()
+        LimparCampos();
+    });
+
+    function MontarRequisicaoJson()
+    {
+        var fraseID = document.getElementById('FraseID');
+        var frase = document.getElementById('Frase');
+
+        var requisicaoJson =
+        {
+            id: fraseID ? fraseID.value || null : null,
+            frase: frase ? frase.value || null : null,
+            autorId: null,
+            registrado: null
+        };
+
+        LimparCampos();
+        
+        return JSON.stringify(requisicaoJson);
+    }
+
+    async function EnviarRequisicaoHTTPRequest(controlador, metodo, requisicaoFrase)
+    {
+        var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        var url = "/" + controlador + "/" + metodo;
+
+        try
+        {
+            var response = await fetch(url,
+            {
+                method: "POST",
+                headers:
+                {
+                    "Content-Type": "application/json",
+                    "X-XSRF-TOKEN": token
+                },
+                body: requisicaoFrase
+            });
+
+            if (response.status == 200)
+            {
+                var jsonResponse = await response.json();
+                return jsonResponse;
+            }
+            else
+            {
+                AtivarErro()
+                return null;
+            }
+        }
+        catch (error)
+        {
+            AtivarErro()
+            return null;
+        }
+    }
+
+    function CriarLinhaTabela(jsonResposta)
+    {
+        if (jsonResposta.length <= 0)
+        {
+            AtivarRetorno();
+            tabela.clear().draw();
+        }
+        else
+        {
+            tabela.clear().draw();
+
+            jsonResposta.forEach(item =>
+            {
+                tabela.row.add([
+                    item.id,
+                    item.frase,
+                    FormatarData(item.registrado),
+                    IncluirBotaoHTML(item)
+                ]).draw();
+            });
+        }
+    }
+
+    function IncluirBotaoHTML(item)
+    {
+        if (typeof item.autor === 'undefined')
+        {
+            return `
+                <button type="button" class="btn btn-outline-danger"
+                    data-bs-toggle="modal" data-bs-target="#ModalFraseEAutor" onclick="AbrirModal(true)">
+                    Indefinido
+                </button>
+            `;
+        }
+        else
+        {
+            return `
+                <button type="button" class="btn btn-outline-success"
+                    data-bs-toggle="modal" data-bs-target="#ModalFraseEAutor"
+                    data-item='${JSON.stringify(item)}' onclick="AbrirModal(this)">
+                    Frase(s)
+                </button>
+            `;
+        }
+    }
+
+    function AbrirModal(elemento)
+    {
+        if (typeof elemento === 'boolean')
+        {
+            document.getElementById('autorModal').textContent = "";
+        }
+        else
+        {
+            var item = JSON.parse(elemento.getAttribute('data-item'));
+
+            var autorModal = document.getElementById('autorModal');
+
+            autorModal.innerHTML = "";
+
+            var li1 = document.createElement('li');
+            li1.textContent = `Nome: ${item.autor.nome} ${item.autor.sobrenome}`
+
+            var li2 = document.createElement('li');
+            li2.textContent = `Status: ${item.autor.status ? 'Ativo' : 'Inativo'}`
+
+            var li3 = document.createElement('li');
+            li3.textContent = FormatarData(item.autor.nascimento);
+
+            var li4 = document.createElement('li');
+            li4.textContent = item.autor.falecimento == null ? "-" : FormatarData(item.autor.falecimento);
+
+            autorModal.appendChild(li1);
+            autorModal.appendChild(li2);
+            autorModal.appendChild(li3);
+            autorModal.appendChild(li4);
+        }
+    }
+
+    function FormatarData(dataDesformatada)
+    {
+        dataSemiFormatada = dataDesformatada.split('T')[0];
+        var [ano, mes, dia] = dataSemiFormatada.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    function LimparCampos()
+    {
+        var fraseID = document.getElementById('FraseID');
+        var frase = document.getElementById('Frase');
+
+        fraseID.value = '';
+        frase.value = '';
+    }
+    
+    function AtivarRetorno()
+    {
+        var retorno = document.getElementById("Retorno");
+        retorno.style.visibility = "visible";
+        retorno.style.color = "green"
+        retorno.innerText = "Nenhuma frase localizada para os parâmetros deinidos.";
+    }
+
+    function AtivarErro()
+    {
+        var erro = document.getElementById("Retorno");
+        erro.style.visibility = "visible";
+        erro.style.color = "red"
+        erro.innerText = "Aconteceu algum erro, entre em contato com o suporte!";
+    }
+
+    function Inativar()
+    {
+        var retorno = document.getElementById("Retorno");
+        retorno.style.visibility = "hidden";
+        retorno.innerText = "...";
+    }
+
+</script>

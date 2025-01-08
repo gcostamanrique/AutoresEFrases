@@ -1,0 +1,257 @@
+﻿@{
+    ViewData["Title"] = "POSTAutor";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="text-center">
+
+    <h3 class="m-4">Registrar Autor</h3>
+
+    <p>Preencher o formulário por completo para registrar um novo autor.</p>
+
+    <div class="pt-2 row justify-content-center fw-bold">
+
+        <label class="col-sm-2 col-form-label">Nome</label>
+
+        <div class="col-sm-3">
+            <input id="AutorNome" name="AutorNome" type="text" class="form-control" maxlength="15">
+        </div>
+        
+    </div>
+
+    <p id="ErroAutorNome" class="mb-1 fw-bold text-danger" style="visibility:hidden">...</p>
+
+    <div class="pt-2 row justify-content-center fw-bold">
+
+        <label class="col-sm-2 col-form-label">Sobrenome</label>
+
+        <div class="col-sm-3">
+            <input id="AutorSobrenome" name="AutorSobrenome" type="text" class="form-control" maxlength="25">
+        </div>
+
+    </div>
+
+    <p id="ErroAutorSobrenome" class="mb-1 fw-bold text-danger" style="visibility:hidden">...</p>
+
+    <div class="pt-2 row justify-content-center fw-bold">
+
+        <label class="col-sm-2 col-form-label">Data Nascimento</label>
+
+        <div class="col-sm-3">
+            <input id="DataNascimento" name="DataNascimento" type="date" class="form-control">
+        </div>
+
+    </div>
+
+    <p id="ErroDataNascimento" class="mb-1 fw-bold text-danger" style="visibility:hidden">...</p>
+
+    <div class="pt-2 row justify-content-center fw-bold">
+
+        <label class="col-sm-2 col-form-label">Data Falecimento</label>
+
+        <div class="col-sm-3">
+            <input id="DataFalecimento" name="DataFalecimento" type="date" class="form-control">
+        </div>
+
+    </div>
+
+    <p id="ErroDataFalecimento" class="mb-1 fw-bold text-danger" style="visibility:hidden">...</p>
+
+    <div class="pt-4 row justify-content-center fw-bold">
+
+        <div class="col-sm-3">
+            <a id="Limpar" name="Limpar" class="btn col-10 btn-danger">Limpar Formulário</a>
+        </div>
+
+        <div class="col-sm-3">
+            <a id="Enviar" name="Enviar" class="btn col-10 btn-success">Registrar Autor</a>
+        </div>
+
+    </div>
+
+    <p id="Retorno" class="m-4 fw-bold" style="visibility:hidden">...</p>
+
+</div>
+
+<script>
+
+    const enviar = document.getElementById("Enviar");
+    enviar.addEventListener("click", async function()
+    {        
+        var requisicaoAutor = MontarRequisicaoJson();
+        var resposta = await EnviarRequisicaoHTTPRequest("Autor", "POSTAutor", requisicaoAutor);
+
+        LimparErrosNoModelo();
+
+        if ( resposta && resposta.title == "Validation errors")
+        {
+            IdentificarErrosNoModelo(resposta.validationErrors);
+        }
+        else if ( resposta && resposta.id)
+        {
+            LimparModelo();
+            AtivarRetorno(resposta);
+        }
+    });
+
+    const limpar = document.getElementById("Limpar");
+    limpar.addEventListener("click", async function()
+    {
+        LimparModelo();
+        LimparErrosNoModelo();
+        InativarRetorno()
+    });
+
+    function MontarRequisicaoJson()
+    {
+        var autorNome = document.getElementById("AutorNome");
+        var autorSobrenome = document.getElementById("AutorSobrenome");
+        var dataNascimento = document.getElementById("DataNascimento");
+        var dataFalecimento = document.getElementById("DataFalecimento");
+
+        var requisicao = 
+        {
+            "nome" : autorNome.value,
+            "sobrenome" : autorSobrenome.value,
+            "nascimento" : dataNascimento.value || null,
+            "falecimento" : dataFalecimento.value || null
+        }
+
+        return JSON.stringify(requisicao);
+    }
+
+    async function EnviarRequisicaoHTTPRequest(controlador, metodo, requisicaoAutor)
+    {
+        var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        var url = "/" + controlador + "/" + metodo;
+
+        try
+        {
+            var response = await fetch(url,
+            {
+                method: "POST",
+                headers:
+                {
+                    "Content-Type": "application/json",
+                    "X-XSRF-TOKEN": token
+                },
+                body: requisicaoAutor
+            });
+
+            if (response.status == 200)
+            {
+                var jsonResponse = await response.json();
+                
+                return jsonResponse;
+            }
+            else if (response.status == 400)
+            {
+                var jsonReponse = response.json();
+
+                return jsonReponse;
+            }
+            else
+            {
+                AtivarRetornoErro();
+
+                return jsonReponse;
+            }
+        }
+        catch (error)
+        {
+            AtivarRetornoErro();
+
+            return null;
+        }
+    }
+
+    function IdentificarErrosNoModelo(resposta)
+    {
+        var erroAutorNome = document.getElementById("ErroAutorNome");
+        var erroAutorSobrenome = document.getElementById("ErroAutorSobrenome");
+        var erroAutorDataNascimento = document.getElementById("ErroDataNascimento");
+        var erroAutorDataFalecimento = document.getElementById("ErroDataFalecimento");
+
+        if(resposta.nome)
+        {
+            erroAutorNome.textContent = resposta.nome[0];
+            erroAutorNome.style.visibility = "visible";
+        }
+
+        if(resposta.sobrenome)
+        {
+            erroAutorSobrenome.textContent = resposta.sobrenome[0];
+            erroAutorSobrenome.style.visibility = "visible";
+        }
+
+        if(resposta.nascimento)
+        {
+            erroAutorDataNascimento.textContent = resposta.nascimento[0];
+            erroAutorDataNascimento.style.visibility = "visible";
+        }
+
+        if(resposta.falecimento)
+        {
+            erroAutorDataFalecimento.textContent = resposta.falecimento[0];
+            erroAutorDataFalecimento.style.visibility = "visible";
+        }
+    }
+
+    function LimparErrosNoModelo()
+    {
+        var erroAutorNome = document.getElementById("ErroAutorNome");
+        var erroAutorSobrenome = document.getElementById("ErroAutorSobrenome");
+        var erroAutorDataNascimento = document.getElementById("ErroDataNascimento");
+        var erroAutorDataFalecimento = document.getElementById("ErroDataFalecimento");
+
+        erroAutorNome.textContent = "...";
+        erroAutorNome.style.visibility = "hidden";
+
+        erroAutorSobrenome.textContent = "...";
+        erroAutorSobrenome.style.visibility = "hidden";
+
+        erroAutorDataNascimento.textContent = "...";
+        erroAutorDataNascimento.style.visibility = "hidden";
+
+        erroAutorDataFalecimento.textContent = "...";
+        erroAutorDataFalecimento.style.visibility = "hidden";
+    }
+
+    function LimparModelo()
+    {
+        var autorNome = document.getElementById("AutorNome");
+        var autorSobrenome = document.getElementById("AutorSobrenome");
+        var autorDataNascimento = document.getElementById("DataNascimento");
+        var autorDataFalecimento = document.getElementById("DataFalecimento");
+
+        autorNome.value = "";
+        autorSobrenome.value = "";
+        autorDataNascimento.value = "";
+        autorDataFalecimento.value = "";
+    }
+
+    function AtivarRetorno(resposta)
+    {
+        var retorno = document.getElementById("Retorno");
+        retorno.style.visibility = "visible";
+        retorno.style.color = "green";
+        retorno.innerText = "Cadastro realizado com sucesso! Novo cadastro possui o número de identificação: " + resposta.id;
+    }
+
+    function AtivarRetornoErro()
+    {
+        var erro = document.getElementById("Retorno");
+        erro.style.visibility = "visible";
+        erro.style.color = "red";
+        erro.innerText = "Aconteceu algum erro, entre em contato com o suporte!";
+    }
+
+    function InativarRetorno()
+    {
+        var erro = document.getElementById("Retorno");
+        erro.style.visibility = "hidden";
+        erro.innerText = "";
+    }
+
+</script>

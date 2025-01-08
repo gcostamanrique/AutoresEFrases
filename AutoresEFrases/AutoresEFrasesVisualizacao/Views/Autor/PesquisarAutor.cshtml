@@ -1,0 +1,323 @@
+﻿@{
+    ViewData["Title"] = "GETAutor";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="text-center">
+
+    <h3 class="m-4">Pesquisar Autor</h3>
+
+    <p>Pesquisa sem parâmetros retorna todos os valores do banco de dados.</p>
+
+    <div class="p-4 row justify-content-center fw-bold">
+
+        <label class="col-sm-1 col-form-label">ID</label>
+        <div class="col-sm-1">
+            <input id="AutorID" name="AutorID" type="text" class="form-control" maxlength="5" oninput="validaId(this)">
+        </div>
+
+        <label class="col-sm-1 col-form-label">Nome</label>
+        <div class="col-sm-3">
+            <input id="AutorNome" name="AutorNome" type="text" class="form-control" maxlength="15">
+        </div>
+
+        <label class="col-sm-1 col-form-label">Sobrenome</label>
+        <div class="col-sm-3">
+            <input id="AutorSobrenome" name="AutorSobrenome" type="text" class="form-control" maxlength="25">
+        </div>
+
+        <div class="col-sm-1">
+            <button id="Limpar" name="Limpar" class="btn btn-outline-danger">Limpar</button>
+        </div>
+
+    </div>
+
+    <div class="p-4 row justify-content-center fw-bold">
+
+        <div class="col-sm-3">
+            <a id="PesquisarAutor" name="PesquisarAutor" class="btn col-10 btn-success">Pesquisar Autor</a>
+        </div>
+
+        <div class="col-sm-3">
+            <a id="PesquisarAutorEFrase" name="PesquisarAutorEFrase" class="btn col-10 btn-success">Pesquisar Autor e Frase</a>
+        </div>
+
+    </div>
+
+    <div"><h6 id="Retorno" name="Retorno" style="visibility:hidden">Retorno</h6>
+</div>
+
+<div>
+    <table id="TabelaAutor">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>Status</th>
+                <th>Nascimento</th>
+                <th>Falecimento</th>
+                <th>Frase(s)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="ModalAutorEFrase" tabindex="-1" aria-labelledby="RotuloModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="RotuloModal">Autor e Frase(s)</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 id="autorModal"></h6>
+                <h6>Frases(s):</h6>
+                <ul id="listaModal"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    const tabela = $('#TabelaAutor').DataTable({
+        paging: true,
+        searching: true,
+        ordering: true,
+        lengthChange: false,
+        info: true,
+        pageLength: 5,
+        language:
+        {
+            search: "Pesquisar:",
+            searchPlaceholder: "",
+            paginate:
+            {
+                previous: "Anterior",
+                next: "Próximo"
+            },
+            info: "Mostrando de _START_ a _END_ de _TOTAL_ registros",
+            infoEmpty: "Nenhum registro disponível",
+            loadingRecords: "Carregando...",
+            zeroRecords: "Nenhum registro encontrado",
+            processing: "Processando...",
+            emptyTable: "Não há dados disponíveis na tabela"
+        },
+        responsive: true
+    });
+
+    function validaId(input)
+    {
+        input.value = input.value.replace(/\D/g, '');
+    }
+
+    const pesquisaAutor = document.getElementById("PesquisarAutor");
+    pesquisaAutor.addEventListener("click", async function()
+    {
+        Inativar()
+        var getAutorDto = MontarRequisicaoJson();
+        var resposta = await EnviarRequisicaoHTTPRequest("Autor", "GETAutor", getAutorDto);
+        CriarLinhaTabela(resposta);
+    });
+
+    const pesquisaAutorEFrase = document.getElementById("PesquisarAutorEFrase");
+    pesquisaAutorEFrase.addEventListener("click", async function()
+    {
+        Inativar()
+        var getAutorDto = MontarRequisicaoJson();
+        var resposta = await EnviarRequisicaoHTTPRequest("Autor", "GETAutorEFrase", getAutorDto);
+        CriarLinhaTabela(resposta);
+    });
+
+    const botaoLimpar = document.getElementById("Limpar");
+    botaoLimpar.addEventListener("click", function()
+    {
+        Inativar()
+        LimparCampos();
+    });
+
+    function MontarRequisicaoJson()
+    {
+        var autorID = document.getElementById('AutorID');
+        var autorNome = document.getElementById('AutorNome');
+        var autorSobrenome = document.getElementById('AutorSobrenome');
+
+        var requisicaoJson =
+        {
+            id: autorID ? autorID.value || null : null,
+            nome: autorNome ? autorNome.value || null : null,
+            sobrenome: autorSobrenome ? autorSobrenome.value || null : null,
+            status: null,
+            nascimento: null,
+            falecimento: null
+        };
+
+        LimparCampos();
+
+        return JSON.stringify(requisicaoJson);
+    }
+
+    async function EnviarRequisicaoHTTPRequest(controlador, metodo, requisicaoAutor)
+    {
+        var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        var url = "/" + controlador + "/" + metodo;
+
+        try
+        {
+            var response = await fetch(url,
+            {
+                method: "POST",
+                headers:
+                {
+                    "Content-Type": "application/json",
+                    "X-XSRF-TOKEN": token
+                },
+                body: requisicaoAutor
+            });
+
+            if (response.status == 200)
+            {
+                var jsonResponse = await response.json();
+                return jsonResponse;
+            }
+            else
+            {
+                AtivarErro()
+                return null;
+            }
+        }
+        catch (error)
+        {
+            AtivarErro()
+            return null;
+        }
+    }
+
+    function CriarLinhaTabela(jsonResposta)
+    {
+        if (jsonResposta.length <= 0)
+        {
+            AtivarRetorno();
+            tabela.clear().draw();
+        }
+        else
+        {
+            tabela.clear().draw();
+
+            jsonResposta.forEach(item =>
+            {
+                tabela.row.add([
+                    item.id,
+                    item.nome,
+                    item.sobrenome,
+                    item.status ? 'Ativo' : 'Inativo',
+                    FormatarData(item.nascimento),
+                    item.falecimento == null ? "-" : FormatarData(item.falecimento),
+                    IncluirBotaoHTML(item)
+                ]).draw();
+            });
+        }
+    }
+
+    function IncluirBotaoHTML(item)
+    {
+        if (typeof item.frase === 'undefined')
+        {
+            return `
+                <button type="button" class="btn btn-outline-danger"
+                    data-bs-toggle="modal" data-bs-target="#ModalAutorEFrase" onclick="AbrirModal(true)">
+                    Indefinido
+                </button>
+            `;
+        }
+        else
+        {
+            return `
+                <button type="button" class="btn btn-outline-success"
+                    data-bs-toggle="modal" data-bs-target="#ModalAutorEFrase"
+                    data-item='${JSON.stringify(item)}' onclick="AbrirModal(this)">
+                    Frase(s)
+                </button>
+            `;
+        }
+    }
+
+    function AbrirModal(elemento)
+    {
+        if (typeof elemento === 'boolean')
+        {
+            document.getElementById('autorModal').textContent = "";
+
+            document.getElementById('listaModal').textContent = "";
+        }
+        else
+        {
+            var item = JSON.parse(elemento.getAttribute('data-item'));
+
+            document.getElementById('autorModal').textContent = `${item.nome} ${item.sobrenome}`;
+
+            var listaModal = document.getElementById('listaModal');
+
+            listaModal.innerHTML = '';
+
+            if (item.frase)
+            {
+                item.frase.forEach(frase =>
+                {
+                    var li = document.createElement('li');
+                    li.textContent = frase.frase;
+                    listaModal.appendChild(li);
+                });
+            }
+        }
+    }
+
+    function FormatarData(dataDesformatada)
+    {
+        dataSemiFormatada = dataDesformatada.split('T')[0];
+        var [ano, mes, dia] = dataSemiFormatada.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    function LimparCampos()
+    {
+        var autorID = document.getElementById('AutorID');
+        var autorNome = document.getElementById('AutorNome');
+        var autorSobrenome = document.getElementById('AutorSobrenome');
+
+        autorID.value = '';
+        autorNome.value = '';
+        autorSobrenome.value = '';
+    }
+
+    function AtivarRetorno()
+    {
+        var retorno = document.getElementById("Retorno");
+        retorno.style.visibility = "visible";
+        retorno.style.color = "green"
+        retorno.innerText = "Nenhuma frase localizada para os parâmetros deinidos.";
+    }
+
+    function AtivarErro()
+    {
+        var erro = document.getElementById("Retorno");
+        erro.style.visibility = "visible";
+        erro.style.color = "red"
+        erro.innerText = "Aconteceu algum erro, entre em contato com o suporte!";
+    }
+
+    function Inativar()
+    {
+        var retorno = document.getElementById("Retorno");
+        retorno.style.visibility = "hidden";
+        retorno.innerText = "...";
+    }
+
+</script>

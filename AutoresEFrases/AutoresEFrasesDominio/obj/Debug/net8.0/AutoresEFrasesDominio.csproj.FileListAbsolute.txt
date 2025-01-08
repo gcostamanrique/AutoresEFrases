@@ -1,0 +1,12 @@
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\bin\Debug\net8.0\AutoresEFrasesDominio.deps.json
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\bin\Debug\net8.0\AutoresEFrasesDominio.dll
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\bin\Debug\net8.0\AutoresEFrasesDominio.pdb
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\AutoresEFrasesDominio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\AutoresEFrasesDominio.AssemblyInfoInputs.cache
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\AutoresEFrasesDominio.AssemblyInfo.cs
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\AutoresEFrasesDominio.csproj.CoreCompileInputs.cache
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\AutoresEFrasesDominio.sourcelink.json
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\AutoresEFrasesDominio.dll
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\refint\AutoresEFrasesDominio.dll
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\AutoresEFrasesDominio.pdb
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesDominio\obj\Debug\net8.0\ref\AutoresEFrasesDominio.dll

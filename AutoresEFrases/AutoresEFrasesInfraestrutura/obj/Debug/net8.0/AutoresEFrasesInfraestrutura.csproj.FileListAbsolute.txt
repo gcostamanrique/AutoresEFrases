@@ -1,0 +1,16 @@
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\bin\Debug\net8.0\AutoresEFrasesInfraestrutura.deps.json
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\bin\Debug\net8.0\AutoresEFrasesInfraestrutura.dll
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\bin\Debug\net8.0\AutoresEFrasesInfraestrutura.pdb
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\bin\Debug\net8.0\AutoresEFrasesDominio.dll
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\bin\Debug\net8.0\AutoresEFrasesDominio.pdb
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresEFrasesInfraestrutura.csproj.AssemblyReference.cache
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresEFrasesInfraestrutura.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresEFrasesInfraestrutura.AssemblyInfoInputs.cache
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresEFrasesInfraestrutura.AssemblyInfo.cs
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresEFrasesInfraestrutura.csproj.CoreCompileInputs.cache
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresEFrasesInfraestrutura.sourcelink.json
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresE.CFBD17A4.Up2Date
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresEFrasesInfraestrutura.dll
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\refint\AutoresEFrasesInfraestrutura.dll
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\AutoresEFrasesInfraestrutura.pdb
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesInfraestrutura\obj\Debug\net8.0\ref\AutoresEFrasesInfraestrutura.dll
