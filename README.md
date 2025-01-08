@@ -13,8 +13,9 @@ Para que o projeto funcione corretamente, é necessário seguir os passos abaixo
 
 1. **Criar a base de dados:**  
    - No projeto, está disponível uma query SQL que pode ser executada no SQL Server.
-   - No projeto `AutoresEFrasesVisualizacao` acesse a pasta `Arquivo` e visualize o arquivo `QuerySQLServer.txt`. 
-   - Essa query realiza a criação de um banco de dados, duas tabelas (`TB_AUTOR` e `TB_FRASE`) e insere registros iniciais nas tabelas.  
+   - No projeto `AutoresEFrasesVisualizacao`, acesse a pasta `Arquivo` e visualize `QuerySQLServer.txt`. 
+   - Esse arquivo simula uma query que realiza a criação de um banco de dados, duas tabelas (`TB_AUTOR` e `TB_FRASE`) e insere registros iniciais nas tabelas.
+   - Basta copiar as informações do arquivo .txt para uma query do SQL Server e executar a query.
 
 2. **Atualizar o arquivo `appsettings.json`:**  
    - Localize o arquivo `appsettings.json` no projeto `AutoresEFrasesVisualizacao`.  
