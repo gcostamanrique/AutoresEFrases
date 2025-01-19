@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoresEFrasesVisualizacao")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d151a8d755ad7581b8ac0fb5021da968c2207c21")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+86b41c54ae2a6c0c41827009ec7b205a9e0d4093")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoresEFrasesVisualizacao")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoresEFrasesVisualizacao")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

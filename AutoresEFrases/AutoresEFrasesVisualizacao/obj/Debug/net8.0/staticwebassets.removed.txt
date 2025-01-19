@@ -1,0 +1,4 @@
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesVisualizacao\wwwroot\js\IncluirAutor.js
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesVisualizacao\wwwroot\js\IncluirFrase.js
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesVisualizacao\wwwroot\js\PesquisarAutor.js
+C:\Users\compu\OneDrive\Área de Trabalho\SL\AutoresEFrases\AutoresEFrases\AutoresEFrasesVisualizacao\wwwroot\js\PesquisarFrase.js

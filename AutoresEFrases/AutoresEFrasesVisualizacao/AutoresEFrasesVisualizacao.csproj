@@ -16,4 +16,8 @@
     <ProjectReference Include="..\AutoresEFrasesInfraestrutura\AutoresEFrasesInfraestrutura.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
 </Project>
